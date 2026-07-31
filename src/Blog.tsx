@@ -70,7 +70,7 @@ function EntryRow({ post, index, active, onClick, compact }: RowInterface) {
     <button
       onClick={onClick}
       className={[
-        "w-full text-left border-b last:border-b-0 border-[#26262b] px-4 py-3 transition-colors",
+        "w-full cursor-pointer text-left border-b last:border-b-0 border-[#26262b] px-4 py-3 transition-colors",
         "hover:bg-[#212125]",
         active ? "bg-[#212125] border-l-2 border-l-[#d98a2b] pl-3.5" : "border-l-2 border-l-transparent",
       ].join(" ")}
@@ -129,17 +129,14 @@ export default function Blog() {
   return (
     <div className="min-h-screen text-white font-sans px-6 pt-24  bg-[#0a0a0c] bg-grid-pattern">
       {!selected ? (
-        <div className="w-full max-w-2xl mx-auto border border-[#26262b] rounded-xl bg-[#141417] p-6">
+        <div className="w-full max-w-2xl h-220 flex flex-col mx-auto border border-[#26262b] rounded-xl bg-[#141417] p-6">
           <div className="mb-5">
             <h1 className="font-mono text-2xl text-[#d98a2b]">My-Blogs</h1>
             <p className="mt-1 font-mono text-xs text-zinc-500">
               {POSTS.length} entries · newest first
             </p>
           </div>
-          <ScrollFade
-            maxHeightClass="max-h-105"
-            className="border border-[#26262b] rounded-lg bg-[#0e0e10]"
-          >
+          <ScrollFade className="flex-1 min-h-0 border border-[#26262b] rounded-lg bg-[#0e0e10]">
             {POSTS.map((post, i) => (
               <EntryRow
                 key={post.id}

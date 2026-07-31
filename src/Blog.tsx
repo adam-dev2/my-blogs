@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { Menu } from 'lucide-react'
 import { POSTS, type Post } from "./Blogs/Blogs.ts";
 
 
@@ -159,10 +160,9 @@ export default function Blog() {
               onClick={() => setSidebarOpen(false)}
             />
           )}
-          <ScrollFade
-            className={`absolute inset-y-0 left-0 z-20 w-75 shrink-0 border-r border-[#26262b] bg-[#141417] transition-transform duration-300 ${
-              sidebarOpen ? "translate-x-0" : "-translate-x-full"
-            } md:static md:translate-x-0`}
+          <div
+            className={`absolute inset-y-0 h-full left-0 z-20 w-75 shrink-0 border-r border-[#26262b] bg-[#141417] transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+              } md:static md:translate-x-0`}
           >
             <button
               onClick={goHome}
@@ -180,21 +180,17 @@ export default function Blog() {
                 onClick={() => openPost(post.slug)}
               />
             ))}
-          </ScrollFade>
+          </div>
 
-          <ScrollFade className="flex-1">
-            <div className="flex min-h-full flex-col p-5 md:p-8">
+          <ScrollFade className="">
+            <div className="flex min-w-2xl min-h-full flex-col p-5 md:p-8">
               <div className="mb-4 flex items-center justify-between md:hidden">
                 <button
                   onClick={() => setSidebarOpen(true)}
                   aria-label="Open posts list"
                   className="flex h-8 w-8 items-center justify-center rounded border border-[#26262b] text-white hover:bg-[#212125]"
                 >
-                  <span className="flex flex-col gap-1">
-                    <span className="h-0.5 w-4 bg-current" />
-                    <span className="h-0.5 w-4 bg-current" />
-                    <span className="h-0.5 w-4 bg-current" />
-                  </span>
+                  <Menu />
                 </button>
               </div>
               <span className="font-mono text-xs tracking-wide text-white uppercase">

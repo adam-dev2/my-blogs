@@ -131,7 +131,7 @@ export default function Blog() {
   };
 
   return (
-    <div className="min-h-screen text-white font-sans px-6 pt-24  bg-[#0a0a0c] bg-grid-pattern">
+    <div className="min-h-screen  text-white font-sans px-6 pt-24  bg-[#0a0a0c] bg-grid-pattern">
       {!selected ? (
         <div className="w-full max-w-2xl h-220 flex flex-col mx-auto border border-[#26262b] rounded-xl bg-[#141417] p-6">
           <div className="mb-5">
@@ -183,7 +183,7 @@ export default function Blog() {
           </div>
 
           <ScrollFade className="">
-            <div className="flex min-w-2xl min-h-full flex-col p-5 md:p-8">
+            <div className="flex min-h-full flex-col p-5 md:p-8">
               <div className="mb-4 flex items-center justify-between md:hidden">
                 <button
                   onClick={() => setSidebarOpen(true)}

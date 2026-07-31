@@ -102,6 +102,7 @@ export default function Blog() {
   const [selectedSlug, setSelectedSlug] = useState<string | null>(() =>
     readSlugFromHash()
   );
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const selected = POSTS.find((p) => p.slug === selectedSlug) || null;
 
@@ -119,11 +120,13 @@ export default function Blog() {
 
   const openPost = (slug: string) => {
     window.location.hash = `/${slug}`;
+    setSidebarOpen(false);
   };
 
   const goHome = () => {
     window.history.pushState(null, "", window.location.pathname + window.location.search);
     setSelectedSlug(null);
+    setSidebarOpen(false);
   };
 
   return (
@@ -149,8 +152,18 @@ export default function Blog() {
           </ScrollFade>
         </div>
       ) : (
-        <div className="w-full max-w-5xl h-220 mx-auto border border-[#26262b] rounded-xl bg-[#141417] flex overflow-hidden">
-          <ScrollFade className="w-75 shrink-0 border-r border-[#26262b]">
+        <div className="relative w-full max-w-5xl h-220 mx-auto border border-[#26262b] rounded-xl bg-[#141417] flex overflow-hidden">
+          {sidebarOpen && (
+            <div
+              className="absolute inset-0 z-10 bg-black/60 md:hidden"
+              onClick={() => setSidebarOpen(false)}
+            />
+          )}
+          <ScrollFade
+            className={`absolute inset-y-0 left-0 z-20 w-75 shrink-0 border-r border-[#26262b] bg-[#141417] transition-transform duration-300 ${
+              sidebarOpen ? "translate-x-0" : "-translate-x-full"
+            } md:static md:translate-x-0`}
+          >
             <button
               onClick={goHome}
               className="w-full text-left font-mono text-xs text-zinc-400 hover:text-white px-4 py-3 border-b border-[#26262b]"
@@ -170,7 +183,20 @@ export default function Blog() {
           </ScrollFade>
 
           <ScrollFade className="flex-1">
-            <div className="flex min-h-full flex-col p-8">
+            <div className="flex min-h-full flex-col p-5 md:p-8">
+              <div className="mb-4 flex items-center justify-between md:hidden">
+                <button
+                  onClick={() => setSidebarOpen(true)}
+                  aria-label="Open posts list"
+                  className="flex h-8 w-8 items-center justify-center rounded border border-[#26262b] text-white hover:bg-[#212125]"
+                >
+                  <span className="flex flex-col gap-1">
+                    <span className="h-0.5 w-4 bg-current" />
+                    <span className="h-0.5 w-4 bg-current" />
+                    <span className="h-0.5 w-4 bg-current" />
+                  </span>
+                </button>
+              </div>
               <span className="font-mono text-xs tracking-wide text-white uppercase">
                 Content
               </span>

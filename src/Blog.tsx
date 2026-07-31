@@ -193,9 +193,7 @@ export default function Blog() {
                   <Menu />
                 </button>
               </div>
-              <span className="font-mono text-xs tracking-wide text-white uppercase">
-                Content
-              </span>
+
               <h2 className="mt-3 font-mono text-2xl text-center text-[#d98a2b]">
                 {selected.title}
               </h2>

@@ -239,16 +239,29 @@ export default function Blog() {
               </a>
             </div>
 
-              <h2 className="mt-3 font-mono text-2xl text-center text-[#d98a2b]">
-                {selected.title}
-              </h2>
-              <div className="mt-3 flex items-center justify-center gap-4 font-mono text-[11px] text-white">
-                <span>created {formatDate(selected.createdAt)}</span>
-                <span>·</span>
-                <span>updated {formatDate(selected.updatedAt)}</span>
-              </div>
-              <div className="mt-6 flex-1 border border-[#26262b] rounded-lg bg-[#0e0e10] p-6">
-                <Markdown source={selected.content} />
+            <ScrollFade className="min-w-0 flex-1">
+              <div className="flex min-h-full flex-col p-5 md:p-8">
+                <div className="mb-4 flex items-center justify-between md:hidden">
+                  <button
+                    onClick={() => setSidebarOpen(true)}
+                    aria-label="Open posts list"
+                    className="flex h-8 w-8 items-center justify-center rounded border border-[#26262b] text-white hover:bg-[#212125]"
+                  >
+                    <Menu />
+                  </button>
+                </div>
+
+                <h2 className="mt-3 font-mono text-2xl text-center text-[#d98a2b]">
+                  {selected.title}
+                </h2>
+                <div className="mt-3 flex items-center justify-center gap-4 font-mono text-[11px] text-white">
+                  <span>created {formatDate(selected.createdAt)}</span>
+                  <span>·</span>
+                  <span>updated {formatDate(selected.updatedAt)}</span>
+                </div>
+                <div className="mt-6 flex-1 border border-[#26262b] rounded-lg bg-[#0e0e10] p-6">
+                  <Markdown source={selected.content} />
+                </div>
               </div>
             </ScrollFade>
           </div>

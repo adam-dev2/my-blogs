@@ -1,75 +1,90 @@
-# React + TypeScript + Vite
+# Adam | Backend Engineer | Blogs
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Personal blog and devlog site for [Adam Durwaish](https://adamhq.site) — notes on git internals, MCP servers, security, search and systems engineering. Live at [blogs.adamhq.site](https://blogs.adamhq.site).
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- [React 19](https://react.dev) + [TypeScript](https://www.typescriptlang.org)
+- [Vite 8](https://vite.dev) for tooling
+- [Tailwind CSS v4](https://tailwindcss.com)
+- [lucide-react](https://lucide.dev) for icons
+- Custom, dependency-free Markdown renderer (no `react-markdown`)
 
-## React Compiler
+## Getting started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+# install dependencies
+npm install
 
-## Expanding the ESLint configuration
+# start the dev server
+npm run dev
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+# type-check + production build
+npm run build
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+# preview the production build
+npm run preview
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+# lint
+npm run lint
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Adding a post
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Posts are plain Markdown files in `src/content/`. Drop a new `*.md` file there — it is picked up automatically via `import.meta.glob` (see `src/Blogs/Blogs.ts`).
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Each file must start with YAML frontmatter:
+
+```markdown
+---
+title: "My post title"
+slug: "my-post-title"
+createdAt: "2026-07-01"
+updatedAt: "2026-07-15"
+---
+
+Your post content in Markdown...
+```
+
+| Field       | Required | Notes                                              |
+| ----------- | -------- | -------------------------------------------------- |
+| `title`     | yes      | Shown in the sidebar and article header             |
+| `slug`      | no       | URL fragment (`#/my-post-title`); falls back to a slugified title |
+| `createdAt` | yes      | ISO date (`YYYY-MM-DD`); used for sorting, newest first |
+| `updatedAt` | yes      | ISO date, shown under the title                     |
+
+### Supported Markdown
+
+The custom renderer (`src/Blogs/Markdown.tsx`) supports:
+
+- Paragraphs
+- `#`–`######` headings (rendered as `h3`)
+- Fenced code blocks (```` ``` ````)
+- Unordered lists (`- ` / `* `) and ordered lists (`1. `)
+- Inline `code` and `**bold**`
+
+## Features
+
+- **Hash-based routing** — each post lives at `#/slug`, with back/forward navigation support. The homepage shows the full archive.
+- **Collapsible sidebar** — on desktop the post list is an in-layout sidebar open by default; on mobile it becomes a slide-in overlay. Both can be closed with the × button and reopened with the hamburger menu.
+- **Archive view** — a scroll-faded list of every post with created/updated dates.
+- **Fade-on-scroll lists** — `ScrollFade` adds top/bottom gradient masks to scrollable areas.
+- **SEO & social meta** — Open Graph, Twitter Card, canonical URL and description tags in `index.html`.
+
+## Project structure
 
 ```
+src/
+├── App.tsx                  # root component
+├── Blog.tsx                 # main layout: header, archive, article, sidebar
+├── Blogs/
+│   ├── Blogs.ts             # frontmatter parsing + post loading/sorting
+│   └── Markdown.tsx         # custom markdown renderer
+├── content/                 # blog posts (Markdown with frontmatter)
+├── main.tsx                 # entry point
+└── index.css                # Tailwind + global styles
+```
+
+## Deployment
+
+Build with `npm run build` and serve the generated `dist/` from any static host (the site is currently deployed at [blogs.adamhq.site](https://blogs.adamhq.site)).

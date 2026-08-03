@@ -32,7 +32,7 @@ now do that again for Jira. again for Slack. again for your internal Postgres db
 
 this is basically the N×M problem: N applications (Claude Desktop, opencode, your own agent) × M tools (GitHub, Jira, Slack, your internal APIs) = N×M custom integrations, each one built and maintained separately.
 
-MCP flips this into N+M. any MCP-*compliant* client can talk to any MCP-compliant server, because:
+MCP flips this into N+M. any MCP-**compliant** client can talk to any MCP-compliant server, because:
 
 - the **tool discovery format** is standardized (`tools/list` always returns the same shape)
 - the **tool call format** is standardized (`tools/call` always looks the same)

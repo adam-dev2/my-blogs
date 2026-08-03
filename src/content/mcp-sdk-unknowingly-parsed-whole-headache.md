@@ -1,8 +1,8 @@
 ---
 title: "MCP-SDK unknowingly parsed whole headache"
 slug: "mcp-sdk-unknowingly-parsed-whole-headache"
-createdAt: "2026-02-18"
-updatedAt: "2026-02-25"
+createdAt: "2026-08-03"
+updatedAt: "2026-08-03"
 ---
 
 If this modelcontextprotocol sdk isn't existed then i should be doing all of this before sending a message to mcp-server either vise too

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
-import { Menu } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { POSTS, type Post } from "./Blogs/Blogs.ts";
 import { Markdown } from "./Blogs/Markdown.tsx";
 
@@ -139,7 +139,9 @@ export default function Blog() {
   const [selectedSlug, setSelectedSlug] = useState<string | null>(() =>
     readSlugFromHash()
   );
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(() =>
+    window.matchMedia("(min-width: 768px)").matches
+  );
 
   const selected = POSTS.find((p) => p.slug === selectedSlug) || null;
 
@@ -160,16 +162,22 @@ export default function Blog() {
       : "Adam | Backend Engineer | Blogs";
   }, [selected]);
 
+  const closeSidebarOnMobile = () => {
+    if (!window.matchMedia("(min-width: 768px)").matches) {
+      setSidebarOpen(false);
+    }
+  };
+
   const openPost = (slug: string) => {
     window.history.pushState(null, "", `#/${slug}`);
     setSelectedSlug(slug);
-    setSidebarOpen(false);
+    closeSidebarOnMobile();
   };
 
   const goHome = () => {
     window.history.pushState(null, "", window.location.pathname + window.location.search);
     setSelectedSlug(null);
-    setSidebarOpen(false);
+    closeSidebarOnMobile();
   };
 
   return (
@@ -206,15 +214,26 @@ export default function Blog() {
               />
             )}
             <div
-              className={`absolute inset-y-0 h-full left-0 z-20 w-75 shrink-0 flex-col border-r border-[#26262b] bg-[#141417] transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
-                } md:static md:translate-x-0 flex`}
+              className={`absolute inset-y-0 left-0 z-20 flex h-full w-75 shrink-0 flex-col border-r border-[#26262b] bg-[#141417] transition-all duration-300 md:static ${sidebarOpen
+                ? "translate-x-0 md:translate-x-0 md:w-75"
+                : "-translate-x-full md:w-0 md:overflow-hidden md:border-r-0"
+                }`}
             >
-              <button
-                onClick={goHome}
-                className="w-full text-left font-mono text-xs text-zinc-400 hover:text-white px-4 py-3 border-b border-[#26262b]"
-              >
-                &larr; back to Home
-              </button>
+              <div className="flex items-center justify-between border-b border-[#26262b]">
+                <button
+                  onClick={goHome}
+                  className="w-full px-4 py-3 text-left font-mono text-xs text-zinc-400 hover:text-white"
+                >
+                  &larr; back to Home
+                </button>
+                <button
+                  onClick={() => setSidebarOpen(false)}
+                  aria-label="Close posts list"
+                  className="m-2 flex h-8 w-8 shrink-0 items-center justify-center rounded border border-[#26262b] text-white hover:bg-[#212125]"
+                >
+                  <X size={16} />
+                </button>
+              </div>
               <div className="min-h-0 flex-1 overflow-y-auto scrollbar-none">
                 {POSTS.map((post, i) => (
                   <EntryRow
@@ -241,11 +260,11 @@ export default function Blog() {
 
             <ScrollFade className="min-w-0 flex-1">
               <div className="flex min-h-full flex-col p-5 md:p-8">
-                <div className="mb-4 flex items-center justify-between md:hidden">
+                <div className="mb-4 flex items-center justify-between ">
                   <button
                     onClick={() => setSidebarOpen(true)}
                     aria-label="Open posts list"
-                    className="flex h-8 w-8 items-center justify-center rounded border border-[#26262b] text-white hover:bg-[#212125]"
+                    className={`flex h-8 w-8 items-center ${sidebarOpen && 'md:hidden'} justify-center rounded border border-[#26262b] text-white hover:bg-[#212125]`}
                   >
                     <Menu />
                   </button>

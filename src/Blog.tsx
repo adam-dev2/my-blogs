@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { Menu } from 'lucide-react'
 import { POSTS, type Post } from "./Blogs/Blogs.ts";
+import { Markdown } from "./Blogs/Markdown.tsx";
 
 
 interface RowInterface {
@@ -238,32 +239,16 @@ export default function Blog() {
               </a>
             </div>
 
-            <ScrollFade className="">
-              <div className="flex min-h-full flex-col p-5 md:p-8">
-                <div className="mb-4 flex items-center justify-between md:hidden">
-                  <button
-                    onClick={() => setSidebarOpen(true)}
-                    aria-label="Open posts list"
-                    className="flex h-8 w-8 items-center justify-center rounded border border-[#26262b] text-white hover:bg-[#212125]"
-                  >
-                    <Menu />
-                  </button>
-                </div>
-
-                <span className="font-mono text-xs text-[#d98a2b]">~/blogs/{selected.slug}</span>
-                <h2 className="mt-2 font-mono text-2xl text-white leading-snug">
-                  {selected.title}
-                </h2>
-                <div className="mt-3 flex items-center justify-start gap-4 font-mono text-[11px] text-zinc-500">
-                  <span>created {formatDate(selected.createdAt)}</span>
-                  <span>·</span>
-                  <span>updated {formatDate(selected.updatedAt)}</span>
-                </div>
-                <div className="mt-6 flex-1 border border-[#26262b] rounded-lg bg-[#0e0e10] p-6 md:p-8">
-                  <p className="max-w-prose font-sans text-[16px] leading-8 text-zinc-300">
-                    {selected.content}
-                  </p>
-                </div>
+              <h2 className="mt-3 font-mono text-2xl text-center text-[#d98a2b]">
+                {selected.title}
+              </h2>
+              <div className="mt-3 flex items-center justify-center gap-4 font-mono text-[11px] text-white">
+                <span>created {formatDate(selected.createdAt)}</span>
+                <span>·</span>
+                <span>updated {formatDate(selected.updatedAt)}</span>
+              </div>
+              <div className="mt-6 flex-1 border border-[#26262b] rounded-lg bg-[#0e0e10] p-6">
+                <Markdown source={selected.content} />
               </div>
             </ScrollFade>
           </div>

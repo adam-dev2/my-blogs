@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { Menu } from 'lucide-react'
 import { POSTS, type Post } from "./Blogs/Blogs.ts";
+import { Markdown } from "./Blogs/Markdown.tsx";
 
 
 interface RowInterface {
@@ -203,9 +204,7 @@ export default function Blog() {
                 <span>updated {formatDate(selected.updatedAt)}</span>
               </div>
               <div className="mt-6 flex-1 border border-[#26262b] rounded-lg bg-[#0e0e10] p-6">
-                <p className="font-sans text-[15px] leading-7 text-zinc-300">
-                  {selected.content}
-                </p>
+                <Markdown source={selected.content} />
               </div>
             </div>
           </ScrollFade>

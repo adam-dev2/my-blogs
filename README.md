@@ -1,6 +1,6 @@
 # Adam | Backend Engineer | Blogs
 
-Personal blog and devlog site for [Adam Durwaish](https://adamhq.site) — notes on git internals, MCP servers, security, search and systems engineering. Live at [blogs.adamhq.site](https://blogs.adamhq.site).
+Personal blog and devlog site for [Adam](https://adamhq.site) — notes on git internals, MCP servers, security, search and systems engineering. Live at [blogs.adamhq.site](https://blogs.adamhq.site).
 
 ## Stack
 

@@ -117,7 +117,7 @@ function parseBlocks(source: string): Block[] {
 export function Markdown({ source }: { source: string }) {
   const blocks = parseBlocks(source);
   return (
-    <div className="font-sans text-[15px] leading-7 text-zinc-300">
+    <div className="scrollbar-none font-sans text-[15px] leading-7 text-zinc-300">
       {blocks.map((block, index) => {
         switch (block.kind) {
           case "heading":
@@ -155,7 +155,7 @@ export function Markdown({ source }: { source: string }) {
             return (
               <pre
                 key={index}
-                className="mb-4 overflow-x-auto rounded-lg border border-[#26262b] bg-[#141417] p-4 font-mono text-[13px] leading-6 text-zinc-300 last:mb-0"
+                className="mb-4 scrollbar-none overflow-x-auto rounded-lg border border-[#26262b] bg-[#141417] p-4 font-mono text-[13px] leading-6 text-zinc-300 last:mb-0"
               >
                 {block.code}
               </pre>

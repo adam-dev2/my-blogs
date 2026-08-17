@@ -1,167 +1,76 @@
-import { type ReactNode } from "react";
-
-function renderInline(text: string): ReactNode[] {
-  const nodes: ReactNode[] = [];
-  const pattern = /(\*\*[^*]+\*\*|`[^`]+`)/g;
-  let last = 0;
-  let key = 0;
-  let match: RegExpExecArray | null;
-  while ((match = pattern.exec(text)) !== null) {
-    if (match.index > last) {
-      nodes.push(text.slice(last, match.index));
-    }
-    const token = match[0];
-    if (token.startsWith("**")) {
-      nodes.push(
-        <strong key={key++} className="font-semibold text-white">
-          {token.slice(2, -2)}
-        </strong>
-      );
-    } else {
-      nodes.push(
-        <code
-          key={key++}
-          className="rounded bg-[#212125] px-1 py-0.5 font-mono text-[13px] text-[#d98a2b]"
-        >
-          {token.slice(1, -1)}
-        </code>
-      );
-    }
-    last = pattern.lastIndex;
-  }
-  if (last < text.length) {
-    nodes.push(text.slice(last));
-  }
-  return nodes;
-}
-
-type Block =
-  | { kind: "paragraph"; text: string }
-  | { kind: "ul"; items: string[] }
-  | { kind: "ol"; items: string[] }
-  | { kind: "code"; code: string }
-  | { kind: "heading"; level: number; text: string };
-
-function parseBlocks(source: string): Block[] {
-  const lines = source.replace(/\r\n/g, "\n").split("\n");
-  const blocks: Block[] = [];
-  let i = 0;
-
-  while (i < lines.length) {
-    const line = lines[i];
-
-    if (line.trim() === "") {
-      i++;
-      continue;
-    }
-
-    if (line.startsWith("```")) {
-      const code: string[] = [];
-      i++;
-      while (i < lines.length && !lines[i].startsWith("```")) {
-        code.push(lines[i]);
-        i++;
-      }
-      i++;
-      blocks.push({ kind: "code", code: code.join("\n") });
-      continue;
-    }
-
-    const heading = line.match(/^(#{1,6})\s+(.*)$/);
-    if (heading) {
-      blocks.push({ kind: "heading", level: heading[1].length, text: heading[2] });
-      i++;
-      continue;
-    }
-
-    if (line.startsWith("- ") || line.startsWith("* ")) {
-      const items: string[] = [];
-      while (i < lines.length && (lines[i].startsWith("- ") || lines[i].startsWith("* "))) {
-        items.push(lines[i].slice(2));
-        i++;
-      }
-      blocks.push({ kind: "ul", items });
-      continue;
-    }
-
-    if (/^\d+\.\s/.test(line)) {
-      const items: string[] = [];
-      while (i < lines.length && /^\d+\.\s/.test(lines[i])) {
-        items.push(lines[i].replace(/^\d+\.\s/, ""));
-        i++;
-      }
-      blocks.push({ kind: "ol", items });
-      continue;
-    }
-
-    const paragraph: string[] = [line];
-    i++;
-    while (
-      i < lines.length &&
-      lines[i].trim() !== "" &&
-      !lines[i].startsWith("```") &&
-      !/^(#{1,6})\s/.test(lines[i]) &&
-      !lines[i].startsWith("- ") &&
-      !lines[i].startsWith("* ") &&
-      !/^\d+\.\s/.test(lines[i])
-    ) {
-      paragraph.push(lines[i]);
-      i++;
-    }
-    blocks.push({ kind: "paragraph", text: paragraph.join(" ") });
-  }
-
-  return blocks;
-}
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export function Markdown({ source }: { source: string }) {
-  const blocks = parseBlocks(source);
   return (
     <div className="scrollbar-none font-sans text-[15px] leading-7 text-zinc-300">
-      {blocks.map((block, index) => {
-        switch (block.kind) {
-          case "heading":
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={{
+          p: ({ children }) => <p className="mb-4 last:mb-0">{children}</p>,
+          strong: ({ children }) => <strong className="font-semibold text-white">{children}</strong>,
+          em: ({ children }) => <em className="text-zinc-200 italic">{children}</em>,
+          a: ({ children, href }) => (
+            <a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#d98a2b] underline decoration-[#d98a2b]/60 underline-offset-2"
+            >
+              {children}
+            </a>
+          ),
+          ul: ({ children }) => <ul className="mb-4 list-disc space-y-1 pl-5 last:mb-0">{children}</ul>,
+          ol: ({ children }) => <ol className="mb-4 list-decimal space-y-1 pl-5 last:mb-0">{children}</ol>,
+          li: ({ children }) => <li className="leading-7">{children}</li>,
+          blockquote: ({ children }) => (
+            <blockquote className="mb-4 border-l-2 border-[#d98a2b]/70 pl-4 italic text-zinc-300">
+              {children}
+            </blockquote>
+          ),
+          code: ({ children, className, ...props }) => {
+            const isInline = !className || !className.includes("language-");
+
+            if (isInline) {
+              return (
+                <code
+                  className="rounded bg-[#212125] px-1.5 py-0.5 font-mono text-[13px] text-[#d98a2b]"
+                  {...props}
+                >
+                  {children}
+                </code>
+              );
+            }
+
             return (
-              <h3
-                key={index}
-                className="mb-2 mt-6 font-mono text-lg text-[#d98a2b] first:mt-0"
-              >
-                {renderInline(block.text)}
-              </h3>
-            );
-          case "paragraph":
-            return (
-              <p key={index} className="mb-4 last:mb-0">
-                {renderInline(block.text)}
-              </p>
-            );
-          case "ul":
-            return (
-              <ul key={index} className="mb-4 list-disc space-y-1 pl-5 last:mb-0">
-                {block.items.map((item, j) => (
-                  <li key={j}>{renderInline(item)}</li>
-                ))}
-              </ul>
-            );
-          case "ol":
-            return (
-              <ol key={index} className="mb-4 list-decimal space-y-1 pl-5 last:mb-0">
-                {block.items.map((item, j) => (
-                  <li key={j}>{renderInline(item)}</li>
-                ))}
-              </ol>
-            );
-          case "code":
-            return (
-              <pre
-                key={index}
-                className="mb-4 scrollbar-none overflow-x-auto rounded-lg border border-[#26262b] bg-[#141417] p-4 font-mono text-[13px] leading-6 text-zinc-300 last:mb-0"
-              >
-                {block.code}
+              <pre className="mb-4 scrollbar-none overflow-x-auto rounded-lg border border-[#26262b] bg-[#141417] p-4 font-mono text-[13px] leading-6 text-zinc-300 last:mb-0">
+                <code className={className} {...props}>
+                  {children}
+                </code>
               </pre>
             );
-        }
-      })}
+          },
+          pre: ({ children }) => <>{children}</>,
+          h1: ({ children }) => <h1 className="mt-6 mb-3 font-mono text-2xl text-[#d98a2b] first:mt-0">{children}</h1>,
+          h2: ({ children }) => <h2 className="mt-6 mb-3 font-mono text-xl text-[#d98a2b] first:mt-0">{children}</h2>,
+          h3: ({ children }) => <h3 className="mt-6 mb-2 font-mono text-lg text-[#d98a2b] first:mt-0">{children}</h3>,
+          h4: ({ children }) => <h4 className="mt-5 mb-2 font-mono text-base text-[#d98a2b] first:mt-0">{children}</h4>,
+          h5: ({ children }) => <h5 className="mt-5 mb-2 font-mono text-sm text-[#d98a2b] first:mt-0">{children}</h5>,
+          h6: ({ children }) => <h6 className="mt-5 mb-2 font-mono text-xs text-[#d98a2b] first:mt-0">{children}</h6>,
+          hr: () => <hr className="my-6 border-[#26262b]" />,
+          table: ({ children }) => (
+            <div className="mb-4 overflow-x-auto">
+              <table className="w-full border-collapse border border-[#26262b] text-left text-sm">
+                {children}
+              </table>
+            </div>
+          ),
+          th: ({ children }) => <th className="border border-[#26262b] bg-[#1b1b1f] px-3 py-2 font-semibold text-white">{children}</th>,
+          td: ({ children }) => <td className="border border-[#26262b] px-3 py-2 text-zinc-300">{children}</td>,
+        }}
+      >
+        {source}
+      </ReactMarkdown>
     </div>
   );
 }

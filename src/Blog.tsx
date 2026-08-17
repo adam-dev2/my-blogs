@@ -186,7 +186,7 @@ export default function Blog() {
 
       {!selected ? (
         <div className="mx-auto w-full max-w-2xl px-6 pb-10 flex-1 min-h-0">
-          <div className="flex h-[min(42rem,calc(100dvh-13.5rem))] min-h-[26rem] flex-col border border-[#26262b] rounded-xl bg-[#141417] p-6">
+          <div className="flex h-[min(42rem,calc(100dvh-13.5rem))] min-h-[26rem] lg:h-[min(48rem,calc(100dvh-10rem))] flex-col border border-[#26262b] rounded-xl bg-[#141417] p-6">
             <div className="mb-5 flex items-baseline justify-between">
               <h2 className="font-mono text-lg text-white">Archive</h2>
               <p className="font-mono text-xs text-zinc-500">newest first</p>
@@ -206,7 +206,7 @@ export default function Blog() {
         </div>
       ) : (
         <div className="mx-auto w-full max-w-5xl px-6 pb-8 flex-1 min-h-0">
-          <div className="relative flex h-[min(46rem,calc(100dvh-13.5rem))] min-h-[26rem] overflow-hidden rounded-xl border border-[#26262b] bg-[#141417]">
+          <div className="relative flex h-[min(46rem,calc(100dvh-13.5rem))] min-h-[26rem] overflow-hidden rounded-xl border border-[#26262b] bg-[#141417] lg:h-[min(56rem,calc(100dvh-8rem))]">
             {sidebarOpen && (
               <div
                 className="absolute inset-0 z-10 bg-black/60 md:hidden"

@@ -1,8 +1,8 @@
 ---
-title: "Pixels are Complex more than i thought"
-slug: "pixels-are-complex"
-createdAt: "2026-08-17"
-updatedAt: "2026-08-17"
+title: "Pixels are more complex than I thought"
+slug: "pixels-are-more-complex-than-i-thought"
+createdAt: "2026-04-28"
+updatedAt: "2026-05-03"
 ---
 
 ## Understanding Bits & Bytes
@@ -33,7 +33,7 @@ Each pixel = 8 + 8 + 8 = 24 bits = 3 bytes
 Let's calculate the uncompressed size of a 10-second FHD video at 30 fps:
 
 **Per frame:**
-- Resolution: 1920 × 1080 = 2,073,600 pixels
+- Resolution: 1920 × 1080 = 2,073,600 pixels 
 - Color depth: 24-bit (RGB)
 - Bytes per frame: 2,073,600 pixels × 3 bytes = ~6.2 MB
 
